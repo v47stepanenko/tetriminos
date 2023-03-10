@@ -12,6 +12,10 @@ int tetrifilter(char *tets_under_test);
 
 
 
+
+
+
+
 tlist *get_tetriminos()
 {
     tlist *head = open_read_file();
