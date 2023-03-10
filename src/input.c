@@ -10,12 +10,6 @@ int hash_counter(char *tets_under_test);
 int neighbors(char *tets, int i, int len);
 int tetrifilter(char *tets_under_test);
 
-
-
-
-
-
-
 tlist *get_tetriminos()
 {
     tlist *head = open_read_file();
