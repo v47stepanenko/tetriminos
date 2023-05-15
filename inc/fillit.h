@@ -17,14 +17,14 @@ typedef struct glist
     char *grid_with_figures;
     int index_of_placed_figure;
     int total_number_of_figures;
-
+    char *current_figure;
 }               gridlist;
 
 
 
 void input(void);		 
 tlist *processing(tlist *figures);
-void output(tlist *checked);
+void output(tlist *checked_list);
 tlist *get_tetriminos();
 tlist *lstnew(char *figure, int counter);
 tlist *add_to_list(tlist *tetris_head, tlist *node);

@@ -53,7 +53,7 @@ tlist *open_read_file()
             t_value[20] = '\0';
             t_value[19] = '\n';
                                                                                     //printf("***%zu***", ft_strlen(t_value));
-        }
+        } 
         
         if (len == 21)
         {
@@ -73,8 +73,8 @@ tlist *open_read_file()
         tlist *node = lstnew(t_value, figure_counter);
         tetris_head = add_to_list(tetris_head, node);
         figure_counter++;
-
-        if (figure_counter > 25)
+ 
+        if (figure_counter > 25) 
         {    
             printf("too many tetriminos\n");
             return (0);
@@ -271,7 +271,7 @@ tlist *lstnew(char *figure, int counter)
 
     node->figure = ft_strdup((char*)figure);
     //printf("****\n%s****\n",node->figure);
-    node->counter= counter;
+    node->counter= counter + 1; 
     node->next = NULL;
 
     return (node);

@@ -15,188 +15,236 @@ char *check_measure_return_grid(char *grid, char *figure);
 char *insert_first_figure(char *grid, char *figure);
 bool collision(char *grid, char *figure, int insertion_point);
 int count_horizontal_options(char *grid, int vertical_size);
+bool recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_figures, int index_curr_fig_to_insert);
+gridlist *duplicate_gridlist(gridlist *curr_grid_sorted);
+void is_smallest_size(gridlist *curr_gridlist);
+tlist *find_current_node(tlist *list_with_figures, int index_of_figure);
 //bool untried_places(char *grid, int possbile_options_counter, int counter);
-bool smth_figure(char *grid, tlist *list_with_figures, int place_to_insert);
+//bool smth_figure(char *grid, tlist *list_with_fresh_figures, int position_index);
 //tlist *copy_tlist (tlist *original_list);
-gridlist *find_options(gridlist *sorted, tlist *list_with_figures);
 
 
 
-void output(tlist *checked)
+void output(tlist *checked_list)
 {
     char *grid = create_grid();
     smallest_grid = ft_strdup(grid);
-    smallest_combination_size = 10000;
+    smallest_combination_size = INT8_MAX;
 
-    gridlist *sorted_list = (gridlist*)malloc(sizeof(gridlist));
+    gridlist *list_with_grid = (gridlist*)malloc(sizeof(gridlist));
         
-        {   
-            grid = insert_first_figure(grid, checked->figure);
-            sorted_list->index_of_placed_figure = checked->counter;
-            checked = checked->next; 
-        }
+            grid = insert_first_figure(grid, checked_list->figure);
+            list_with_grid->index_of_placed_figure = checked_list->counter;
+            checked_list = checked_list->next;      
+ 
+    list_with_grid->grid_with_figures = ft_strdup((char*)grid);
+    //printf("****\n%s****\n", list_with_grid->grid_with_figures);
+    list_with_grid->total_number_of_figures = num_of_figures;
+   //printf("total num of fig = %d\n", list_with_grid->total_number_of_figures);
+    if (!recursive_find_options(list_with_grid, checked_list, 2))
+    printf("Tetrimino sorting successful!\n");
 
-    sorted_list->grid_with_figures = ft_strdup((char*)grid);
-    //printf("****\n%s****\n", sorted_list->grid_with_figures);
-    sorted_list->total_number_of_figures = num_of_figures;
-    printf("num of fig %d\n", sorted_list->total_number_of_figures);
-    sorted_list = find_options(sorted_list, checked);
+    printf("smallest = \n%s\n",smallest_grid);
 
 
+   // printf("%s\n",grid);
+    //printf("vert options%d\n", count_vertical_options(grid));
 
-      //  while (smth_figure(grid, checked, 0) != true)
-      //  {}
         
         
-        printf("%s \n", smallest_grid); 
-        printf("size  - %d\n", check_result_size(smallest_grid));
+        //printf("%s \n", smallest_grid); 
+                    printf("size  - %d\n", check_result_size(smallest_grid));
   }      
-        
 
-gridlist *find_options(gridlist *sorted, tlist *list_with_figures)
+bool recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_figures, int index_curr_fig_to_insert)
 {
-    if (list_with_figures->counter == sorted->total_number_of_figures)
-    {
-        printf("entered compare,final\n");
-            result_size = check_result_size(sorted->grid_with_figures);
-            if (result_size < smallest_combination_size)
-            {
-                smallest_combination_size = result_size;                                                                                                                                                                                                                                                                                                                            
-                ft_strcpy(smallest_grid, sorted->grid_with_figures); 
-                printf("copied smallest grid\n%s\n", smallest_grid);   
-            }
-        return sorted;
-    }
-    printf("entered and skipped return\n");
-    int place_to_insert = 0;
-    gridlist *sorted_copy = (gridlist*)malloc(sizeof(gridlist));
-    sorted_copy->grid_with_figures = ft_strdup((char*)sorted->grid_with_figures);
-    sorted_copy->index_of_placed_figure = sorted->index_of_placed_figure;
-    sorted_copy->total_number_of_figures = sorted->total_number_of_figures;
-   // tlist *list_with_figures_copy;
-    int possible_places_to_insert = (count_vertical_options(sorted->grid_with_figures) + 1) * GRID_HORIZONTAL - 1;
-                        printf("__________Places to insert %d__________\n", possible_places_to_insert);
-    printf("before while\n");
-    while (list_with_figures->counter < sorted->total_number_of_figures)
-    {
-        if (place_to_insert <= possible_places_to_insert)
-        {    
-            printf("____\n%s\n____\n",sorted_copy->grid_with_figures);
-            printf("____\n%s\n____\n",list_with_figures->figure);
-            printf("____\n%d\n____\n",place_to_insert);
+    printf("current figure counter  = %d\n",list_with_fresh_figures->counter);
+    printf("index of placed figure = %d\n",curr_grid_sorted->index_of_placed_figure);
+    printf("total num of figures = %d\n",curr_grid_sorted->total_number_of_figures);
+    printf("default grid before anything = \n%s\n",curr_grid_sorted->grid_with_figures);
 
-            printf("before collision\n");
-            if (collision(sorted_copy->grid_with_figures, list_with_figures->figure , place_to_insert) == false)
-            {    
-                printf("before sorted_copy\n");
-                sorted_copy->grid_with_figures = ft_strdup(sorted->grid_with_figures);
-                //list_with_figures_copy = copy_tlist(list_with_figures);
-                printf("before insert\n");
-                
-                insert_figure(sorted_copy->grid_with_figures,list_with_figures->figure, place_to_insert);
-                place_to_insert++;
-                sorted_copy->index_of_placed_figure = list_with_figures->counter;
-                printf("before req\n");
-                if(list_with_figures->next != NULL)
-                    sorted_copy = find_options(sorted_copy, list_with_figures->next);
-                else
-                    sorted_copy = find_options(sorted_copy, list_with_figures);
-            }   
-            else 
-            {
-                place_to_insert++;
-            }    
-        }
+    if (curr_grid_sorted->index_of_placed_figure == curr_grid_sorted->total_number_of_figures)
+    {
+        is_smallest_size(curr_grid_sorted); 
 
+        printf("true\n");
+
+        ////
+        return true;
     }
 
-    return sorted;
+    // get the actual figure
+    tlist *current_node = find_current_node(list_with_fresh_figures, index_curr_fig_to_insert);
+    int position_index = 0;
+    gridlist *curr_grid_backup;
+    
+    int possible_places_to_insert = (count_vertical_options(curr_grid_sorted->grid_with_figures) + 1) * GRID_HORIZONTAL - 2;
+    
+   // gridlist *curr_grid_backup = duplicate_gridlist(curr_grid_sorted);
 
-}
+    printf("__________Places to insert %d__________\n", possible_places_to_insert);
 
-
-/*tlist *copy_tlist (tlist *original_list)
-{
-    tlist *copy = (tlist *)malloc(sizeof(tlist));
-
-    if (original_list->next == NULL)
+    while (position_index <= possible_places_to_insert)
     {
-        copy->counter = original_list->counter;
-        copy->figure = ft_strdup(original_list->figure);
-        copy->next = NULL;
-        return copy;
-    }
-    original_list = original_list->next;
-    while (original_list->next != NULL)
-    {
-        copy->counter = original_list->counter;
-        copy->figure = ft_strdup(original_list->figure);
-        copy->next = original_list->next;
-        original_list = original_list->next;
-    }
-    return copy;
-}
-*/
-
-/*bool smth_figure(char *grid, tlist *list_with_figures, int place_to_insert)
-{
-    char *backup_grid = ft_strdup(grid);
-    char *figure_to_insert = ft_strdup(list_with_figures->figure);
-    ft_strcpy(test_grid, backup_grid);
-    int possible_places_to_insert = (count_vertical_options(test_grid) + 1) * GRID_HORIZONTAL - 1;
-                        printf("__________Places to insert %d__________\n", possible_places_to_insert);
-
-
-    while (place_to_insert < possible_places_to_insert)
-    {
-        if (collision(test_grid, figure_to_insert, place_to_insert) == false)
+        // if can insert
+        if (collision(curr_grid_sorted->grid_with_figures, current_node->figure, position_index) == false)
         {
-            insert_figure(test_grid,figure_to_insert, place_to_insert);
-            printf("%s\n", test_grid);
-            place_to_insert++;
-            printf("place %dfor \n%s\n",place_to_insert, list_with_figures->figure);
-            
-            if (list_with_figures->next == NULL)
+            printf("no collision\n");
+
+            // backup
+            curr_grid_backup = duplicate_gridlist(curr_grid_sorted); 
+
+            printf("backup = \n%s\n",curr_grid_backup->grid_with_figures);  
+
+            // insert
+            insert_figure(curr_grid_sorted->grid_with_figures, current_node->figure, position_index);
+        
+            curr_grid_sorted->index_of_placed_figure = current_node->counter;
+
+            printf("nocol, index - %d\n", position_index);
+
+            position_index++;
+
+            if (index_curr_fig_to_insert + 1 <= curr_grid_sorted->total_number_of_figures)
             {
-                printf("entered compare\n");
-                result_size = check_result_size(test_grid);
-                if (result_size < smallest_combination_size)
-                {
-                    smallest_combination_size = result_size;                                                                                                                                                                                                                                                                                                                            
-                    ft_strcpy(smallest_grid, test_grid); 
-                    printf("copied smallest\n");
-                    printf("%s\n", smallest_grid);   
-                }
+                printf("first, last not null, recurse\n");
+
+                index_curr_fig_to_insert++;
             }
-            else
+
+            printf("recursing\n");   
+
+            if (recursive_find_options(curr_grid_sorted, list_with_fresh_figures, index_curr_fig_to_insert))   // RECURSION
             {
-                list_with_figures = list_with_figures->next;
-                printf("entered recursive\n");
-                while (smth_figure(test_grid, list_with_figures,0) == false)
-                {
-                }
+                printf("restored from backup, \n");
+
+                curr_grid_sorted = duplicate_gridlist(curr_grid_backup);   //backup restore
+
+                printf("backed-up = \n%s\n",curr_grid_sorted->grid_with_figures);
+                printf("current figure counter  = %d\n",list_with_fresh_figures->counter);
+                printf("index of placed figure = %d\n",curr_grid_sorted->index_of_placed_figure);
+                printf("current index = %d / %d\n",position_index, possible_places_to_insert);
+                printf("current figure = \n%s\n",curr_grid_sorted->current_figure);
+            
             }
         }
         else
-        {    
-            place_to_insert++;
+        {
+            printf("collision, index - %d\n", position_index);
+            position_index++;
         }
+    }
 
-        ft_strcpy(test_grid, backup_grid);
-        printf("ignored\n");
-        printf("place %dfor \n%s\n",place_to_insert, list_with_figures->figure);
+    printf("false\n");
+
+    ////
+    return false;
+}
+
+tlist *find_current_node(tlist *list_with_figures, int index_of_figure)
+{
+    while (list_with_figures->counter != index_of_figure)
+    {
+        list_with_figures = list_with_figures->next;
+    }
+    return list_with_figures;
+}
+
+
+
+
+/*
+bool *recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_figures)
+{
+    printf("current figure counter  = %d\n",list_with_fresh_figures->counter);
+    printf("index of placed figure = %d\n",curr_grid_sorted->index_of_placed_figure);
+    printf("total num of figures = %d\n",curr_grid_sorted->total_number_of_figures);
+    printf("default grid before anything = \n%s\n",curr_grid_sorted->grid_with_figures);
+    
+    if (list_with_fresh_figures->counter == curr_grid_sorted->index_of_placed_figure)
+    {
+        printf("entered compare,final\n");
+            result_size = check_result_size(curr_grid_sorted->grid_with_figures);
+            if (result_size < smallest_combination_size)
+            {
+                smallest_combination_size = result_size;                                                                                                                                                                                                                                                                                                                            
+                ft_strcpy(smallest_grid, curr_grid_sorted->grid_with_figures); 
+                printf("copied smallest grid\n%s\n", smallest_grid);   
+            }
+        return curr_grid_sorted;
+    }
+    printf("entered and skipped final return\n");
+    int position_index = 0;
+    gridlist *curr_grid_backup = duplicate_gridlist(curr_grid_sorted);
+    int possible_places_to_insert = (count_vertical_options(curr_grid_sorted->grid_with_figures) + 1) * GRID_HORIZONTAL - 1;
+                        printf("__________Places to insert %d__________\n", possible_places_to_insert);
+    printf("before while\n");
+    while (list_with_fresh_figures->counter != curr_grid_sorted->total_number_of_figures)// HERE!!!!!
+    {
+        //curr_grid_backup = duplicate_gridlist(curr_grid_sorted);
+        if (position_index < possible_places_to_insert)
+        {    
+            printf("__*__\n%s\n__*_\n",curr_grid_backup->grid_with_figures);
+            printf("____\n%s\n____\n",list_with_fresh_figures->figure);
+            printf("____\nplace to insert:%d\n____\n",position_index);
+
+            //printf("before collision\n");
+            if (collision(curr_grid_sorted->grid_with_figures, list_with_fresh_figures->figure , position_index) == false)
+            {   
+                printf("no collision\n");
+                curr_grid_backup->grid_with_figures = ft_strdup(curr_grid_sorted->grid_with_figures);
+                printf("before insert\n");
+                insert_figure(curr_grid_backup->grid_with_figures,list_with_fresh_figures->figure, position_index);
+                position_index++;
+                curr_grid_backup-> index_of_placed_figure = list_with_fresh_figures->counter;//   HERE ++
+                printf("index of placed / fresh counter = %d and %d\n",curr_grid_backup->index_of_placed_figure, list_with_fresh_figures->counter);
+                if(list_with_fresh_figures->next != NULL)
+                {
+                    printf("first not null recurse\n");
+                    curr_grid_backup = recursive_find_options(curr_grid_backup, list_with_fresh_figures->next);
+                }    
+                else 
+                {
+                    printf("second null recurse\n");
+                    curr_grid_backup = recursive_find_options(curr_grid_backup, list_with_fresh_figures);
+                }
+            }   
+            else 
+            {
+                position_index++;
+            }    
+        
+        }
+        else   
+            break;
 
     }
     
-    ft_strdel(&backup_grid);
-    ft_strdel(&figure_to_insert); // MOVE IT TO THE END BEFORE RETURN TRUE 
-    printf("place %dfor \n%s\n",place_to_insert, list_with_figures->figure);
-    return true; 
+    printf("last return\n");
+    return curr_grid_backup;
+
 }
 
 */
+void is_smallest_size(gridlist *curr_gridlist)
+{
+            result_size = check_result_size(curr_gridlist->grid_with_figures);
+            if (result_size < smallest_combination_size)
+            {
+                smallest_combination_size = result_size;                                                                                                                                                                                                                                                                                                                            
+                ft_strcpy(smallest_grid, curr_gridlist->grid_with_figures); 
+                printf("copied smallest grid\n%s\n", smallest_grid);   
+            }
+}
 
-
+gridlist *duplicate_gridlist(gridlist *curr_grid_sorted)
+{
+    gridlist *curr_grid_backup = (gridlist*)malloc(sizeof(gridlist));
+    curr_grid_backup->grid_with_figures = ft_strdup((char*)curr_grid_sorted->grid_with_figures);
+    curr_grid_backup->index_of_placed_figure = curr_grid_sorted->index_of_placed_figure;
+    curr_grid_backup->total_number_of_figures = curr_grid_sorted->total_number_of_figures;
+    return curr_grid_backup;
+}
 
 char *create_grid(void)
 {
@@ -238,44 +286,8 @@ int count_horizontal_options(char *grid, int vertical_size)
     }
     return max_h_size;
 }
-int horizontal(char *grid, int current_line)// !fix , here 
-{
-    int k = 0;
-    if (current_line == 0)
-    {
-        k = GRID_HORIZONTAL - 1;
 
-        while (grid[k] == '\n' || grid[k] == '.')
-        {
-            k--;
-        }
-       // printf("for 0 address is %d\n", k + 1);
-        return k + 1;
-    }
-    else
-         k = ((current_line + 1) * GRID_HORIZONTAL) - 1;
-  //         printf("for %d line is %d\n", current_line, k);  
-    
-    while (k != GRID_HORIZONTAL * current_line)
-    {
-        while (grid[k] == '\n' || grid[k] == '.')
-        {
-            if (k == GRID_HORIZONTAL * current_line)
-            {
-                //printf("address is %d\n", k);
-                return k;
-            }
-            k--;
-        }
-            
-        //printf("last address is %d\n", k + 1);
-        return (k + 1);   
-    }    
-   // printf("last address2 is %d\n", k + 1);
-    return (k + 1);
-
-}
-int count_vertical_options(char *grid) // ! ADD CONDITION TO STOP AFTER NO V WAS FOUND IN A LINE
+int count_vertical_options(char *grid)
 {
     int current_line = 1;
     int i = 0;
@@ -285,12 +297,12 @@ int count_vertical_options(char *grid) // ! ADD CONDITION TO STOP AFTER NO V WAS
     {
         while (grid[i] != '\n')
         {
-            if((grid[i] != '.') || i < (GRID_HORIZONTAL * current_line) - 1) 
+            if((grid[i] != '.') && i < (GRID_HORIZONTAL * current_line) - 1) 
             {
                 char_found++;
                 lines_not_empty++;
-                current_line++;
                 i = GRID_HORIZONTAL * current_line; 
+                current_line++;
                 char_found = 0;
                 continue;
             }
@@ -324,7 +336,7 @@ bool collision(char *grid, char *figure, int insertion_point)
                 }
                 else if (((grid[i_grid + insertion_point] >= 'A' && grid[i_grid + insertion_point] <='Z') && (figure[i_figure] >= 'A' && figure[i_figure] <= 'Z')) || (grid[i_grid + insertion_point] == '\n'))
                 {  
-                    printf("collision\n");
+                    //printf("collision\n");
                     return true;
                 }
                 else
@@ -409,6 +421,9 @@ int check_result_size(char *grid)
     return vertical_size * horizontal_size;
 }
 
+
+
+
 /* while (line_end != GRID_HORIZONTAL * count_lines - GRID_HORIZONTAL)
     {
         if (grid[line_end] == '.' || grid[line_end] == '\n')
@@ -429,6 +444,129 @@ int check_result_size(char *grid)
     return grid;
  */   
 
+
+
+/*tlist *copy_tlist (tlist *original_list)
+{
+    tlist *copy = (tlist *)malloc(sizeof(tlist));
+
+    if (original_list->next == NULL)
+    {
+        copy->counter = original_list->counter;
+        copy->figure = ft_strdup(original_list->figure);
+        copy->next = NULL;
+        return copy;
+    }
+    original_list = original_list->next;
+    while (original_list->next != NULL)
+    {
+        copy->counter = original_list->counter;
+        copy->figure = ft_strdup(original_list->figure);
+        copy->next = original_list->next;
+        original_list = original_list->next;
+    }
+    return copy;
+}
+*/
+
+/*bool smth_figure(char *grid, tlist *list_with_fresh_figures, int position_index)
+{
+    char *backup_grid = ft_strdup(grid);
+    char *figure_to_insert = ft_strdup(list_with_fresh_figures->figure);
+    ft_strcpy(test_grid, backup_grid);
+    int possible_places_to_insert = (count_vertical_options(test_grid) + 1) * GRID_HORIZONTAL - 1;
+                        printf("__________Places to insert %d__________\n", possible_places_to_insert);
+
+
+    while (position_index < possible_places_to_insert)
+    {
+        if (collision(test_grid, figure_to_insert, position_index) == false)
+        {
+            insert_figure(test_grid,figure_to_insert, position_index);
+            printf("%s\n", test_grid);
+            position_index++;
+            printf("place %dfor \n%s\n",position_index, list_with_fresh_figures->figure);
+            
+            if (list_with_fresh_figures->next == NULL)
+            {
+                printf("entered compare\n");
+                result_size = check_result_size(test_grid);
+                if (result_size < smallest_combination_size)
+                {
+                    smallest_combination_size = result_size;                                                                                                                                                                                                                                                                                                                            
+                    ft_strcpy(smallest_grid, test_grid); 
+                    printf("copied smallest\n");
+                    printf("%s\n", smallest_grid);   
+                }
+            }
+            else
+            {
+                list_with_fresh_figures = list_with_fresh_figures->next;
+                printf("entered recursive\n");
+                while (smth_figure(test_grid, list_with_fresh_figures,0) == false)
+                {
+                }
+            }
+        }
+        else
+        {    
+            position_index++;
+        }
+
+        ft_strcpy(test_grid, backup_grid);
+        printf("ignored\n");
+        printf("place %dfor \n%s\n",position_index, list_with_fresh_figures->figure);
+
+    }
+    
+    ft_strdel(&backup_grid);
+    ft_strdel(&figure_to_insert); // MOVE IT TO THE END BEFORE RETURN TRUE 
+    printf("place %dfor \n%s\n",position_index, list_with_fresh_figures->figure);
+    return true; 
+}
+
+*/
+
+
+
+/*int horizontal(char *grid, int current_line)// !fix , here 
+{
+    int k = 0;
+    if (current_line == 0)
+    {
+        k = GRID_HORIZONTAL - 1;
+
+        while (grid[k] == '\n' || grid[k] == '.')
+        {
+            k--;
+        }
+       // printf("for 0 address is %d\n", k + 1);
+        return k + 1;
+    }
+    else
+         k = ((current_line + 1) * GRID_HORIZONTAL) - 1;
+  //         printf("for %d line is %d\n", current_line, k);  
+    
+    while (k != GRID_HORIZONTAL * current_line)
+    {
+        while (grid[k] == '\n' || grid[k] == '.')
+        {
+            if (k == GRID_HORIZONTAL * current_line)
+            {
+                //printf("address is %d\n", k);
+                return k;
+            }
+            k--;
+        }
+            
+        //printf("last address is %d\n", k + 1);
+        return (k + 1);   
+    }    
+   // printf("last address2 is %d\n", k + 1);
+    return (k + 1);
+
+}
+*/
 
 /*char *insert_figure(char *grid, char *figure, int current_point) 
 {
@@ -634,7 +772,7 @@ int check_result_size(char *grid)
         return true;
 }
 */
-/*void place_figure(t_list *checked)
+/*void place_figure(t_list *checked_list)
 {
     char *backup = ft_strdup(grid);                 //grid or any other temp ? 
     test_grid = ft_strcpy(test_grid, backup);                   //??
@@ -655,9 +793,9 @@ int check_result_size(char *grid)
                 continue;
             }
             
-        try_figure_combinaton(i, checked->content);
-        if(checked->next != NULL);
-            try_figure_combination(i + 1, checked->next->figure);
+        try_figure_combinaton(i, checked_list->content);
+        if(checked_list->next != NULL);
+            try_figure_combination(i + 1, checked_list->next->figure);
         
 
 
@@ -666,7 +804,7 @@ int check_result_size(char *grid)
         
 
         test_grid = insert_figure(test_grid, figure, i);
-        if (checked->next == NULL)
+        if (checked_list->next == NULL)
         {
             if (smallest_combination_size < check_result_size(test_grid))
             {
@@ -675,7 +813,7 @@ int check_result_size(char *grid)
             }
 
             else
-                //call function checked->next 
+                //call function checked_list->next 
 
         }
 
