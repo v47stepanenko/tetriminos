@@ -6,6 +6,7 @@ int main (void)
 {
     tlist *tetris = NULL; 
     static tlist *checked_figures = NULL;
+    
     tetris = get_tetriminos();//(av[0]);
     //printf("main\n");
     //printf("%s", tetris->figure);
@@ -14,7 +15,6 @@ int main (void)
         printf("no tetris \n");
         return 1;
     }
- 
     
     checked_figures = processing(tetris);
     output(checked_figures);

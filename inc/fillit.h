@@ -1,7 +1,7 @@
 #ifndef FILLIT_H
 #define FILLIT_H
-#define GRID_HORIZONTAL 5
-#define GRID_VERTICAL 8
+#define GRID_HORIZONTAL 10
+#define GRID_VERTICAL 10
 
 #include <libft.h>
 
@@ -15,12 +15,10 @@ typedef struct list
 typedef struct glist
 {
     char *grid_with_figures;
-    int index_of_placed_figure;
+    //int index_of_placed_figure;
     int total_number_of_figures;
     char *current_figure;
 }               gridlist;
-
-
 
 void input(void);		 
 tlist *processing(tlist *figures);
