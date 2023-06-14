@@ -2,15 +2,21 @@
 #define FILLIT_H
 #define GRID_HORIZONTAL 10
 #define GRID_VERTICAL 10
+#define TETRIMINO_SIZE 21
+
+#define TETRIMINO_WIDTH 5
+#define TETRIMINO_HEIGHT 5
 
 #include <libft.h>
+#include <limits.h>
 
-typedef struct list
+
+typedef struct list // rename
 {
     char *figure;
-    int counter;
+    int counter; // remove OR id_in_list
     struct list *next;
-}               tlist;
+}               tetrimino_node;
  
 typedef struct glist
 {
@@ -21,13 +27,39 @@ typedef struct glist
 }               gridlist;
 
 void input(void);		 
-tlist *processing(tlist *figures);
-void output(tlist *checked_list);
-tlist *get_tetriminos();
-tlist *lstnew(char *figure, int counter);
-tlist *add_to_list(tlist *tetris_head, tlist *node);
+tetrimino_node *processing(tetrimino_node *figures);
+void output(tetrimino_node *checked_list);
+tetrimino_node *get_tetriminos();
+tetrimino_node *lstnew(char *figure, int counter);
+tetrimino_node *add_to_list(tetrimino_node *tetris_head, tetrimino_node *node);
 
 int num_of_figures;
+
+// REFACTORED 
+  
+//read_file
+char *read_file(char *file_name);
+char *read_file_contents(int fd);
+tetrimino_node *get_tetriminos(char *input_file);
+
+//validate_figures
+bool are_tetriminos_valid(tetrimino_node *input_tetriminos, bool(*validator)(tetrimino_node *));
+bool check_wrong_chars(char *tets_under_test);
+bool check_hash_count(char *tets_under_test);
+bool check_individual_hash_neighbors(char *tets, int i, int len);
+bool check_hash_neighbors(char *tets_under_test);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 #endif

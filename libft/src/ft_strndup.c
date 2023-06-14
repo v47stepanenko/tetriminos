@@ -3,10 +3,7 @@
 char *ft_strndup(char *src, size_t len)
 {
     size_t i = 0;
-
-    char* str = ft_memalloc(len);
-    if (str == NULL)
-        return (NULL);
+    char* str = ft_strnew(str);
     
     while (i != len)
     {

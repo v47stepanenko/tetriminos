@@ -15,14 +15,14 @@ char *check_measure_return_grid(char *grid, char *figure);
 char *insert_first_figure(char *grid, char *figure);
 bool collision(char *grid, char *figure, int insertion_point);
 int count_horizontal_options(char *grid, int vertical_size);
-void recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_figures, int index_curr_fig_to_insert);
+void recursive_find_options(gridlist *curr_grid_sorted, tetrimino_node *list_with_fresh_figures, int index_curr_fig_to_insert);
 gridlist *duplicate_gridlist(gridlist *curr_grid_sorted);
 void is_smallest_size(gridlist *curr_gridlist);
-tlist *find_current_node(tlist *list_with_figures, int index_of_figure);
+tetrimino_node *find_current_node(tetrimino_node *list_with_figures, int index_of_figure);
 
 
 
-void output(tlist *checked_list)
+void output(tetrimino_node *checked_list)
 {
     char *grid = create_grid();
     smallest_grid = ft_strdup(grid);
@@ -53,18 +53,29 @@ void output(tlist *checked_list)
        //             printf("size  - %d\n", check_result_size(smallest_grid));
 }      
 
-void recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_figures, int index_curr_fig_to_insert)
+void recursive_find_options(gridlist *curr_grid_sorted, tetrimino_node *list_with_fresh_figures, int index_curr_fig_to_insert)
 {
+  //  printf("current figure counter  = %d\n",list_with_fresh_figures->counter);
+    //printf("index of placed figure = %d\n",curr_grid_sorted->index_of_placed_figure);
+   // printf("total num of figures = %d\n",curr_grid_sorted->total_number_of_figures);
+ //   printf("default grid before anything = \n%s\n",curr_grid_sorted->grid_with_figures);
+    printf("entered\n");
     index_curr_fig_to_insert++;
     if (index_curr_fig_to_insert > curr_grid_sorted->total_number_of_figures)
     {
+        // TODO: For the love of god, rename this to something that describes what the fuction does ;(
+        printf("true\n");
         is_smallest_size(curr_grid_sorted); 
+        printf("is smallest\n");
+
         return;
     }
  
-    tlist *current_node = find_current_node(list_with_fresh_figures, index_curr_fig_to_insert);
+    // get the actual figure
+    tetrimino_node *current_node = find_current_node(list_with_fresh_figures, index_curr_fig_to_insert);
     int position_index = 0;
-    gridlist *curr_grid_backup = duplicate_gridlist(curr_grid_sorted);
+    gridlist *curr_grid_backup = duplicate_gridlist(curr_grid_sorted); 
+    printf("before counting vert oopt\n");
    
     int vertical_options;
     if (count_vertical_options(curr_grid_sorted->grid_with_figures) == GRID_VERTICAL)
@@ -73,25 +84,64 @@ void recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_f
         vertical_options = count_vertical_options(curr_grid_sorted->grid_with_figures) + 1;
     
     int possible_places_to_insert = vertical_options * GRID_HORIZONTAL - 2;
+    printf("after counting vert oopt\n");
     
+   // gridlist *curr_grid_backup = duplicate_gridlist(curr_grid_sorted);   
+ 
+    printf("__________Places to insert %d__________\n", possible_places_to_insert);
+   
     while (position_index <= possible_places_to_insert) 
     {
+        // IF WE COLLIDE - WE ITERATE POSITION AND CARRY ONTO THE NEXT POSITION_INDEX
         if (collision(curr_grid_sorted->grid_with_figures, current_node->figure, position_index) == true)
         {
             position_index++;
             continue;
         } 
 
-        curr_grid_sorted = duplicate_gridlist(curr_grid_backup);
+        // IF WE DO NOT COLLIDE - WE INSERT FIGURE
+       printf("no collision\n");
+       // printf("backup = \n%s\n",curr_grid_backup->grid_with_figures);  
+
+        // insert
+        curr_grid_sorted = duplicate_gridlist(curr_grid_backup);   //backup restore
         insert_figure(curr_grid_sorted->grid_with_figures, current_node->figure, position_index);
     
+        //curr_grid_sorted->index_of_placed_figure = current_node->counter;
+
+       printf("nocol, index - %d\n", position_index);    
+
+        printf("recursing\n");   
+ 
+        // abuse = backup
+
+        // TODO: Remove if and bool from return 
         recursive_find_options(curr_grid_sorted, list_with_fresh_figures, index_curr_fig_to_insert);
+
+        /*
+        if (recursive_find_options(curr_grid_sorted, list_with_fresh_figures, index_curr_fig_to_insert))   // RECURSION
+        {
+            printf("restored from backup, \n");
+
+            curr_grid_sorted = duplicate_gridlist(curr_grid_backup);   //backup restore
+
+            printf("backed-up = \n%s\n",curr_grid_sorted->grid_with_figures);
+            printf("current figure counter  = %d\n",list_with_fresh_figures->counter);
+            printf("index of placed figure = %d\n",curr_grid_sorted->index_of_placed_figure);
+            printf("current index = %d / %d\n",position_index, possible_places_to_insert);
+            printf("current figure = \n%s\n",curr_grid_sorted->current_figure);
+        }
+        */
 
         position_index++;
     }
+
+    printf("false\n");
+
+    //// 
 }
 
-tlist *find_current_node(tlist *list_with_figures, int index_of_figure)
+tetrimino_node *find_current_node(tetrimino_node *list_with_figures, int index_of_figure)
 {
     while (list_with_figures->counter != index_of_figure)
     {
@@ -104,7 +154,7 @@ tlist *find_current_node(tlist *list_with_figures, int index_of_figure)
 
 
 /*
-bool *recursive_find_options(gridlist *curr_grid_sorted, tlist *list_with_fresh_figures)
+bool *recursive_find_options(gridlist *curr_grid_sorted, tetrimino_node *list_with_fresh_figures)
 {
     printf("current figure counter  = %d\n",list_with_fresh_figures->counter);
     printf("index of placed figure = %d\n",curr_grid_sorted->index_of_placed_figure);
@@ -184,7 +234,7 @@ void is_smallest_size(gridlist *curr_gridlist)
     printf("after check result size\n");
     if (result_size < smallest_combination_size)
     {
-        smallest_combination_size = result_size;                                                                                                                                                                                                                         
+        smallest_combination_size = result_size;                                                                                                                                                                                                                                                                                                                            
         ft_strcpy(smallest_grid, curr_gridlist->grid_with_figures); 
         printf("copied smallest grid\n%s - %d\n", smallest_grid, result_size);   
     }

@@ -2,7 +2,7 @@ NAME = libft.a
 
 SRC_DIR :=	./src/
 OBJ_DIR :=	./obj/
-INC_DIR :=	./includes/
+INC_DIR :=	./inc/
 
 SRC = 	ft_memset.c\
 		ft_putchar.c\
@@ -68,7 +68,7 @@ SRC = 	ft_memset.c\
 		
 OBJ =     $(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
-INC = -I ./includes/
+INC = -I ./inc/
 CC = gcc
 CC_FLAGS = -Werror -Wextra -Wall
 
@@ -96,6 +96,6 @@ clean:
 fclean: clean
 	rm -rf $(NAME)
 
-re: clean all
+re: fclean all
 
 vpath %.c $(SRC_DIR)

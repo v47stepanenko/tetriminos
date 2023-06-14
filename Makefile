@@ -9,6 +9,8 @@ INC_DIR :=	./inc/
 # project source files
 
 SRC =	main.c\
+	read_file.c\
+	validate_figures.c\
 	input.c\
 	processing.c\
 	output.c\

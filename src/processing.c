@@ -1,6 +1,6 @@
 #include "fillit.h"
 
-char *cut_figure(tlist *tetri, int counter);
+char *cut_figure(tetrimino_node *tetri, int counter);
 int countColumns(char *hashFigure, int horizontalLeft);
 char *copyHash(char *hashFigure, char *resultFigure, int horizontalLeft, int verticalLeft);
 
@@ -11,7 +11,7 @@ char *convert_tetri(char *figure, int counter)
     {
         if (figure[i] == '#')
         {
-            figure[i] = 65 + counter;
+            figure[i] = 'A' + counter;
             i++;
         } 
         else 
@@ -21,16 +21,16 @@ char *convert_tetri(char *figure, int counter)
 }
 
 
-tlist *processing(tlist *figures)
+tetrimino_node *processing(tetrimino_node *figures)
 {
-    tlist *cutOut = NULL;
+    tetrimino_node *cutOut = NULL;
     int newlistFigureCounter = 0;
     char *tetri;
 
     while (figures != NULL)
     {    
         tetri = cut_figure(figures, newlistFigureCounter);
-        tlist *figureNode = lstnew(tetri, newlistFigureCounter);
+        tetrimino_node *figureNode = lstnew(tetri, newlistFigureCounter);
         cutOut = add_to_list(cutOut, figureNode);
         newlistFigureCounter++;
         figures = figures->next; 
@@ -40,9 +40,9 @@ tlist *processing(tlist *figures)
     return cutOut;
 }
 
-char *cut_figure(tlist *tetri, int counter)
+char *cut_figure(tetrimino_node *tetri, int counter)
 {
-    tlist *temp = tetri;
+    tetrimino_node *temp = tetri;
     int p = 0;
     int multh = 0;
     int i;
@@ -54,48 +54,48 @@ char *cut_figure(tlist *tetri, int counter)
     char *hashFigure = NULL;
     char *resultFigure = NULL;
    
-        single_figure = ft_strdup(temp->figure);
-        while(p <= 15) //0
+    single_figure = ft_strdup(temp->figure);
+    while(p <= 15) //0
+    {
+        multh = 0;
+        while (multh < 4 && p <= 15) //0
         {
-            multh = 0;
-            while (multh < 4 && p <= 15) //0
+            i = p + multh;
+            if (single_figure[i] == '#')
             {
-                i = p + multh;
-                if (single_figure[i] == '#')
-                {
-                    horizontalLeft++;
-                    if (hashFigure == NULL)
-                        hashFigure = ft_strndup(&single_figure[i - multh], 5);
-                    else
-                        hashFigure = ft_strncat_m(hashFigure, &single_figure[i - multh], 5); 
-                    break;         
-                }
-
+                horizontalLeft++;
+                if (hashFigure == NULL)
+                    hashFigure = ft_strndup(&single_figure[i - multh], 5);
                 else
-                {
-                    multh++;
-                    i = p + multh;
-                }           
-            } 
-            
-            if (p >= 16)
-                break;
-        
-            tempFigure = ft_strsub(single_figure, p, ft_strlen(single_figure) - p);
-            i = 0;
-            p += 5;
-        }
-            
-            p = 0;
-            i = 0;
-            ft_strdel(&tempFigure);   
+                    hashFigure = ft_strncat_m(hashFigure, &single_figure[i - multh], 5); 
 
-            verticalLeft = countColumns(hashFigure, horizontalLeft);
-            square = (horizontalLeft * (verticalLeft + 1));
-            resultFigure = ft_strnew(square);
-            resultFigure = copyHash(hashFigure, resultFigure, horizontalLeft, verticalLeft);
-            resultFigure = convert_tetri(resultFigure, counter);
-            return resultFigure;
+                break;         
+            }
+            else
+            {
+                multh++;
+                i = p + multh;
+            }           
+        } 
+        
+        if (p >= 16)
+            break;
+    
+        tempFigure = ft_strsub(single_figure, p, ft_strlen(single_figure) - p);
+        i = 0;
+        p += 5;
+    }
+            
+    p = 0;
+    i = 0;
+    ft_strdel(&tempFigure);   
+
+    verticalLeft = countColumns(hashFigure, horizontalLeft);
+    square = (horizontalLeft * (verticalLeft + 1));
+    resultFigure = ft_strnew(square);
+    resultFigure = copyHash(hashFigure, resultFigure, horizontalLeft, verticalLeft);
+    resultFigure = convert_tetri(resultFigure, counter);
+    return resultFigure;
 } 
 
 int countColumns(char *hashFigure, int horizontalLeft)
@@ -124,6 +124,7 @@ int countColumns(char *hashFigure, int horizontalLeft)
     }
     return (columnCounter);
 } 
+
 char *copyHash(char *hashFigure, char *resultFigure, int horizontalLeft, int verticalLeft)
 {        
     int i = 0;

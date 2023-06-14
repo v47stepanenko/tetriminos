@@ -38,19 +38,19 @@ static void del_node(Stack *stack, const int fd)
  static Node *getnode(Stack *stack, const int fd)  
     {
         Node *tmp = stack->head;
-        while (tmp != NULL)                                 // try to find FD in list
+        while (tmp != NULL)                                         // try to find FD in list
         {
-            if (tmp->fdnum == fd)                           // if it's there - return it
+            if (tmp->fdnum == fd)                                   // if it's there - return it
                 return tmp;
             tmp = tmp->next;
         }     
         
-        Node *new_node = (Node*)malloc(sizeof(Node)); // if it's not - create it
+        Node *new_node = (Node*)malloc(sizeof(Node));               // if it's not - create it
         new_node->fdnum = fd;
         new_node->line = NULL;
-        new_node->next = stack->head;                 // add it to list       
+        new_node->next = stack->head;                               // add it to list       
         stack->head = new_node;
-        return(new_node);                             // return it
+        return(new_node);                                           // return it
     }
               
 int get_next_line(const int fd, char **line)
@@ -90,7 +90,7 @@ int get_next_line(const int fd, char **line)
 
         if (rv < BUFF_SIZE)
         {
-            *line = ft_strdup(curr->line); //записываю строку 
+            *line = ft_strdup(curr->line);                           //write line 
             del_node(list, fd);
             return ft_strlen(*line);
         }
