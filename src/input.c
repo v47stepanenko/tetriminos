@@ -1,4 +1,4 @@
-#include "fillit.h"
+/* #include "fillit.h"
 //#define FILENAME = "av[1]"
 
 tetrimino_node *open_read_file();
@@ -116,7 +116,7 @@ int tetrifilter(char *tets_under_test)
     return (1);    
 }
 
-/* bool check_wrong_chars(char *tets_under_test)
+bool check_wrong_chars(char *tets_under_test)
 {
     int i = 0;
     int modulo = 0;
@@ -239,7 +239,7 @@ int check_figures(char *tets_under_test)
     return 0;
 }*/
 
-// DIFFERENT FILE!! FOR LIST
+/* // DIFFERENT FILE!! FOR LIST
 tetrimino_node *get_new_node(char *figure)//, int counter)
 {
     tetrimino_node *node = (tetrimino_node*)malloc(sizeof(tetrimino_node));
@@ -271,4 +271,4 @@ tetrimino_node *add_to_list(tetrimino_node *list_head, tetrimino_node *new_node)
     tmp->next = new_node;
 
     return (list_head);
-}
+} */

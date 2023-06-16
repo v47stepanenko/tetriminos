@@ -109,9 +109,9 @@ void recursive_find_options(gridlist *curr_grid_sorted, tetrimino_node *list_wit
     
         //curr_grid_sorted->index_of_placed_figure = current_node->counter;
 
-       printf("nocol, index - %d\n", position_index);    
+       //printf("nocol, index - %d\n", position_index);    
 
-        printf("recursing\n");   
+        //printf("recursing\n");   
  
         // abuse = backup
 
@@ -251,19 +251,14 @@ gridlist *duplicate_gridlist(gridlist *curr_grid_sorted)
 
 char *create_grid(void)
 {
-    int i = GRID_HORIZONTAL;
-    int j = GRID_VERTICAL;
-    char *grid = (char*)malloc((i * j + 1) * sizeof(char));  
-    if (grid == NULL)
-        return(NULL);
-    ft_memset(grid, '.', i * j);
-    grid[i * j] = '\0';
-    j = 0;
+    int grid_size = GRID_HORIZONTAL * GRID_VERTICAL;
+    char *grid = ft_strnew(grid_size);
+    ft_memset(grid, '.', grid_size);
+    int j = 1;
     
     while (j < GRID_VERTICAL)
     {
-        grid[i-1] = '\n';
-        i+=GRID_HORIZONTAL;
+        grid[j * GRID_HORIZONTAL - 1] = '\n';
         j++;
     }
 

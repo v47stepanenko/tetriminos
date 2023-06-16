@@ -11,6 +11,7 @@ INC_DIR :=	./inc/
 SRC =	main.c\
 	read_file.c\
 	validate_figures.c\
+	list_functions.c\
 	input.c\
 	processing.c\
 	output.c\
@@ -23,7 +24,7 @@ OBJ =	$(addprefix $(OBJ_DIR), $(SRC:.c=.o))
 
 LIBFT =         $(LIBFT_DIR)libft.a
 LIBFT_DIR :=    $(LIB_DIR)libft/
-LIBFT_INC :=    $(LIBFT_DIR)includes/
+LIBFT_INC :=    $(LIBFT_DIR)inc/
 LIBFT_FLAGS :=  -lft -L $(LIBFT_DIR)
 
 

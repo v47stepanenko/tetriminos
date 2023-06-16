@@ -1,6 +1,7 @@
 #ifndef FILLIT_H
 #define FILLIT_H
-#define GRID_HORIZONTAL 10
+
+#define GRID_HORIZONTAL 10 //add function that expands in case no free space availbale for tetriminos 
 #define GRID_VERTICAL 10
 #define TETRIMINO_SIZE 21
 
@@ -31,7 +32,6 @@ tetrimino_node *processing(tetrimino_node *figures);
 void output(tetrimino_node *checked_list);
 tetrimino_node *get_tetriminos();
 tetrimino_node *lstnew(char *figure, int counter);
-tetrimino_node *add_to_list(tetrimino_node *tetris_head, tetrimino_node *node);
 
 int num_of_figures;
 
@@ -43,23 +43,14 @@ char *read_file_contents(int fd);
 tetrimino_node *get_tetriminos(char *input_file);
 
 //validate_figures
-bool are_tetriminos_valid(tetrimino_node *input_tetriminos, bool(*validator)(tetrimino_node *));
+bool are_tetriminos_valid(tetrimino_node *input_tetriminos, bool(*validator)(char *figure));
 bool check_wrong_chars(char *tets_under_test);
 bool check_hash_count(char *tets_under_test);
 bool check_individual_hash_neighbors(char *tets, int i, int len);
 bool check_hash_neighbors(char *tets_under_test);
 
-
-
-
-
-
-
-
-
-
-
-
-
+//list functions
+tetrimino_node *get_new_node(char *figure);//, int counter)
+void add_to_list(tetrimino_node **list_head, tetrimino_node *new_node);
 
 #endif

@@ -72,7 +72,7 @@ INC = -I ./inc/
 CC = gcc
 CC_FLAGS = -Werror -Wextra -Wall
 
-HEADER_FLAGS := -I $(INC_DIR)
+HEADER_FLAGS := -I$(INC_DIR)
 
 all: $(NAME)
 

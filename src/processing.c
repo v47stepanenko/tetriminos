@@ -1,4 +1,4 @@
-#include "fillit.h"
+/* #include "fillit.h"
 
 char *cut_figure(tetrimino_node *tetri, int counter);
 int countColumns(char *hashFigure, int horizontalLeft);
@@ -200,3 +200,4 @@ char *copyHash(char *hashFigure, char *resultFigure, int horizontalLeft, int ver
 }
 
 
+ */

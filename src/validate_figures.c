@@ -1,16 +1,18 @@
 #include "fillit.h"
 
-bool are_tetriminos_valid(tetrimino_node *input_tetriminos, bool(*validator)(tetrimino_node *))
+bool are_tetriminos_valid(tetrimino_node *input_tetriminos, bool(*validator)(char *figure))
 {
     tetrimino_node *list_iter = input_tetriminos;
     while (list_iter != NULL)
     {
-        if (validator(list_iter) == false)
+        if (validator(list_iter->figure) == false)
         {   
             return (false);
         }
+        
         list_iter = list_iter->next;
     }
+
     return true;
 }
 
