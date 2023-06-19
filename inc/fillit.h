@@ -1,41 +1,22 @@
 #ifndef FILLIT_H
 #define FILLIT_H
 
-#define GRID_HORIZONTAL 10 //add function that expands in case no free space availbale for tetriminos 
-#define GRID_VERTICAL 10
+#define GRID_HORIZONTAL 7
+#define GRID_VERTICAL 6
 #define TETRIMINO_SIZE 21
 
-#define TETRIMINO_WIDTH 5
+#define TETRIMINO_WIDTH 5 
 #define TETRIMINO_HEIGHT 5
 
 #include <libft.h>
 #include <limits.h>
-
-
+#include <ctype.h>
+ 
 typedef struct list // rename
 {
     char *figure;
-    int counter; // remove OR id_in_list
     struct list *next;
 }               tetrimino_node;
- 
-typedef struct glist
-{
-    char *grid_with_figures;
-    //int index_of_placed_figure;
-    int total_number_of_figures;
-    char *current_figure;
-}               gridlist;
-
-void input(void);		 
-tetrimino_node *processing(tetrimino_node *figures);
-void output(tetrimino_node *checked_list);
-tetrimino_node *get_tetriminos();
-tetrimino_node *lstnew(char *figure, int counter);
-
-int num_of_figures;
-
-// REFACTORED 
   
 //read_file
 char *read_file(char *file_name);
@@ -52,5 +33,20 @@ bool check_hash_neighbors(char *tets_under_test);
 //list functions
 tetrimino_node *get_new_node(char *figure);//, int counter)
 void add_to_list(tetrimino_node **list_head, tetrimino_node *new_node);
+
+//convert
+char *convert_to_letters(char *tetrimino) ;
+char *trim_tetrimino_square(char *tetrimino_square);
+void iterate_convert_tetrimino_list(tetrimino_node *tetrimino_list, char*(*converter)(char*));
+
+//output
+
+char *create_grid(void);
+void recursive_get_smallest_square(tetrimino_node *tetriminos, char *grid, char *smallest_square);
+void insert_figure(char *grid, char *figure, int insertion_point);
+int count_vertical_options(char *grid);
+int check_result_size(char *grid);
+bool collision(char *grid, char *figure, int insertion_point);
+int count_horizontal_options(char *grid, int vertical_size);
 
 #endif

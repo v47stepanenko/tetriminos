@@ -26,11 +26,16 @@ bool check_wrong_chars(char *tets_under_test)
 
         if (modulo == 0 && tets_under_test[i] != '\n')
         {
-            return false;
+           printf("CHECK_WRONG_CHARS\n");
+           return false;
         }
-        else if (tets_under_test[i] != '.' || 
-                 tets_under_test[i] != '#')
+        else if (tets_under_test[i] != '.' && 
+                 tets_under_test[i] != '#' && tets_under_test[i] != '\n')
         {
+                       printf("**%c**\n", tets_under_test[i]);
+                       printf("**%s**\n", tets_under_test);
+                       printf("**%d**\n", i);
+
             return false;
         }
 

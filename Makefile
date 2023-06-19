@@ -9,12 +9,11 @@ INC_DIR :=	./inc/
 # project source files
 
 SRC =	main.c\
-	read_file.c\
-	validate_figures.c\
-	list_functions.c\
-	input.c\
-	processing.c\
-	output.c\
+		read_file.c\
+		validate_figures.c\
+		list_functions.c\
+		convert.c\
+		output.c\
 
 # project object files
 

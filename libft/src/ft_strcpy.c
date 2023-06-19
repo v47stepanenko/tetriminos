@@ -3,7 +3,7 @@
 char *ft_strcpy(char *dst, const char *src)
 {
     size_t i = 0;
-    size_t n = ft_strlen(src)+1;
+    size_t n = ft_strlen(src);
 
     while (i < n)
     {
