@@ -12,4 +12,5 @@ the smallest possible square:
 To launch:
 
 make
+
 ./fillit tetriminos/valid_tetriminos.txt
